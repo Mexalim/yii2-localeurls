@@ -16,12 +16,6 @@
   "require-dev": {
     "phpunit/phpunit": ">4.0 <8"
   },
-  "repositories": [
-    {
-            "type": "vcs",
-            "url": "https://github.com/codemix/yii2-localeurls"
-        }
-  ],
   "autoload": {
     "psr-4": {
       "codemix\\localeurls\\": ""
