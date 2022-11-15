@@ -410,7 +410,7 @@ class UrlManager extends BaseUrlManager
             }
             if ($language === null || $language === $this->_defaultLanguage) {
                 if (!$this->enableDefaultLanguageUrlCode) {
-                    //return;
+                    $language = $this->_defaultLanguage;
                 } else {
                     $language = $this->_defaultLanguage;
                 }
