@@ -150,6 +150,11 @@ class UrlManager extends BaseUrlManager
     public $geoIpLanguageCountries = [];
 
     /**
+     * @var Class
+     */
+    public $cityDefault = 'odesa';
+
+    /**
      * @var int the HTTP status code. Default is 302.
      */
     public $languageRedirectCode = 302;
@@ -180,6 +185,7 @@ class UrlManager extends BaseUrlManager
                 throw new InvalidConfigException('Locale URL support requires enablePrettyUrl to be set to true.');
             }
         }
+
         $this->_defaultLanguage = Yii::$app->language;
         parent::init();
     }
@@ -233,6 +239,10 @@ class UrlManager extends BaseUrlManager
      */
     public function createUrl($params)
     {
+
+        $session = \Yii::$app->session;
+        $city_domen = $session->get('city_domen');
+
         if ($this->ignoreLanguageUrlPatterns) {
             $params = (array) $params;
             $route = trim($params[0], '/');
@@ -325,9 +335,18 @@ class UrlManager extends BaseUrlManager
                 if ($insertPos > 0) {
                     return substr_replace($url, '/' . $language, $insertPos, 0);
                 } else {
-                    return '/' . $language . $url;
+
+                    if ($city_domen != $this->cityDefault) {
+                        return '/' . $language . '/' . $city_domen . $url;
+                    } else {
+                        return '/' . $language . $url;
+                    }
                 }
             } else {
+
+                if ($city_domen != $this->cityDefault) {
+                    $url = $city_domen.$url;
+                }
                 return $url;
             }
         } else {
