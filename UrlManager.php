@@ -242,6 +242,12 @@ class UrlManager extends BaseUrlManager
 
         $session = \Yii::$app->session;
         $city_domen = $session->get('city_domen');
+        $city_domen_request = Yii::$app->getRequest()->getQueryParam('city');
+
+        if (empty($city_domen_request)) {
+            $city_domen = $this->cityDefault;
+            $session->set('city_domen', $this->cityDefault);
+        }
 
         if ($this->ignoreLanguageUrlPatterns) {
             $params = (array) $params;
@@ -336,6 +342,8 @@ class UrlManager extends BaseUrlManager
                     return substr_replace($url, '/' . $language, $insertPos, 0);
                 } else {
 
+                    return '/' . $language . $url;
+
                     if ($city_domen != $this->cityDefault) {
                         return '/' . $language . '/' . $city_domen . $url;
                     } else {
@@ -347,11 +355,13 @@ class UrlManager extends BaseUrlManager
                 if ($city_domen != $this->cityDefault) {
                     $url = $city_domen.$url;
                 }
+
                 return $url;
             }
         } else {
             return parent::createUrl($params);
         }
+
     }
 
     /**
@@ -649,6 +659,7 @@ class UrlManager extends BaseUrlManager
             return;
         }
         Yii::trace("Redirecting to $url.", __METHOD__);
+
         Yii::$app->getResponse()->redirect($url, $this->languageRedirectCode);
         if (YII2_LOCALEURLS_TEST) {
             // Response::redirect($url) above will call `Url::to()` internally.
